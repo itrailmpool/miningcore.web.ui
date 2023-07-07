@@ -1,27 +1,3 @@
-/*!
-  * Miningcore.js v1.02
-  * Copyright 2020 Authors (https://github.com/minernl/Miningcore)
-  */
-
-// --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-// Current running domain (or ip address) url will be read from the browser url bar.
-// You can check the result in you browser development view -> F12 -> Console 
-// -->> !! no need to change anything below here !! <<--
-// --------------------------------------------------------------------------------------------
-// --------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
 // read WebURL from current browser
 var WebURL         = window.location.protocol + "//" + window.location.hostname + "/";  // Website URL is:  https://domain.com/
 // WebURL correction if not ends with /
@@ -30,7 +6,7 @@ if (WebURL.substring(WebURL.length-1) != "/")
 	WebURL = WebURL + "/";
 	console.log('Corrected WebURL, does not end with / -> New WebURL : ', WebURL);
 }
-var API            = WebURL + "api/";   						// API address is:  https://domain.com/api/
+var API            = "http://134.17.89.174:4000/" + "api/";   						// API address is:  https://domain.com/api/
 // API correction if not ends with /
 if (API.substring(API.length-1) != "/")
 {
@@ -49,7 +25,7 @@ var stratumAddress = window.location.hostname;           				// Stratum address 
 // --------------------------------------------------------------------------------------------
 // no need to change anything below here
 // --------------------------------------------------------------------------------------------
-console.log('MiningCore.WebUI : ', WebURL);		                      // Returns website URL
+console.log('MiningPool.WebUI : ', WebURL);		             			      // Returns website URL
 console.log('API address used : ', API);                                      // Returns API URL
 console.log('Stratum address  : ', "stratum+tcp://" + stratumAddress + ":");  // Returns Stratum URL
 console.log('Page Load        : ', window.location.href);                     // Returns full URL
@@ -134,14 +110,6 @@ function loadIndex() {
 	    console.log('Loading connect page content');
         $(".nav-connect").addClass("active");
 		loadConnectPage();
-        break;
-	  case "faq":
-	    console.log('Loading faq page content');
-        $(".nav-faq").addClass("active");
-        break;
-      case "support":
-	    console.log('Loading support page content');
-        $(".nav-support").addClass("active");
         break;
       default:
       // default if nothing above fits
@@ -351,7 +319,7 @@ function loadBlocksPage() {
 
 // Load PAYMENTS page content
 function loadPaymentsPage() {
-  return $.ajax(API + "pools/" + currentPool + "/payments?page=0&pageSize=500")
+  return $.ajax(API + "pools/" + currentPool + "/payments?page=0&pageSize=100")
     .done(function(data) {
       var paymentList = "";
       if (data.length > 0) {
@@ -407,7 +375,7 @@ function loadConnectPage() {
 			}
 			connectPoolConfig += "<tr><td>Pool Fee</td><td>" + value.poolFeePercent + "%</td></tr>";
 			$.each(value.ports, function(port, options) {
-				connectPoolConfig += "<tr><td>stratum+tcp://" + coinType + "." + stratumAddress + ":" + port + "</td><td>";
+				connectPoolConfig += "<tr><td>stratum+tcp://" + stratumAddress + ":" + port + "</td><td>";
 				if (typeof options.varDiff !== "undefined" && options.varDiff != null) {
 					connectPoolConfig += "Difficulty Variable / " + options.varDiff.minDiff + " &harr; ";
 					if (typeof options.varDiff.maxDiff === "undefined" || options.varDiff.maxDiff == null) {
@@ -432,11 +400,11 @@ function loadConnectPage() {
       $("#miner-config").load("poolconfig/" + coinType + ".html",
         function( response, status, xhr ) {
           if ( status == "error" ) {
-			$("#miner-config").load("poolconfig/default.html",
+			$("#miner-config").load("poolconfig/default1.html",
 			  function(responseText){
 				var config = $("#miner-config")
                 .html()
-				.replace(/{{ stratumAddress }}/g, coinType + "." + stratumAddress + ":" + defaultPort)
+				.replace(/{{ stratumAddress }}/g, stratumAddress + ":" + defaultPort)
 				.replace(/{{ coinName }}/g, coinName)
 				.replace(/{{ aglorithm }}/g, algorithm);
 				$(this).html(config);  
@@ -445,7 +413,7 @@ function loadConnectPage() {
 		  } else {
 			var config = $("#miner-config")
             .html()
-            .replace(/{{ stratumAddress }}/g, coinType + "." + stratumAddress + ":" + defaultPort)
+            .replace(/{{ stratumAddress }}/g, stratumAddress + ":" + defaultPort)
 			.replace(/{{ coinName }}/g, coinName)
 			.replace(/{{ aglorithm }}/g, algorithm);
             $(this).html(config);
@@ -478,7 +446,18 @@ function loadWallet() {
   window.location.href = "#" + currentPool + "/" + currentPage + "?address=" + $("#walletAddress").val();
 }
 
+/*
+1 kH/s* (one kilo hash) is 1,000 (one thousand) hashes per second
+1 MH/s (one mega hash) is 1,000,000 (one million) hashes per second
+1 GH/s (one giga hash) is 1,000,000,000 (one billion) hashes per second
+1 TH/s (one tera hash) is 1,000,000,000,000 (one trillion) hashes per second
+1 PH/s (one peta hash) is 1,000,000,000,000,000 (one quadrillion) hashes per second
+1 EH/s (one exa hash) is 1,000,000,000,000,000,000 (one quintillion) hashes per second
+1 ZH/s (one zeta hash) is 1,000,000,000,000,000,000,000 (one sextillion) hashes per second
+1 YH/s (one yotta hash) is 1,000,000,000,000,000,000,000,000 (one septillion) hashes per second
 
+* kH/s is always written with a lower case k as upper case K is reserved for Kelvin (which is a measurement of heat).
+*/
 // General formatter function
 function _formatter(value, decimal, unit) {
   if (value === 0) {
