@@ -7,7 +7,7 @@
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <meta name="msapplication-TileImage" content="img/pool-icon.png">
   
-  <title>Miningcore.WebUI</title>
+  <title>MiningPool.WebUI</title>
   
   <link rel="apple-touch-icon" href="img/pool-icon.png">  
   <link rel="apple-touch-icon" sizes="76x76" href="img/pool-icon.png">
@@ -136,16 +136,6 @@ Apply one or more of the following classes to get the desired effect
               <i class="fas fa-plug"></i><span>Connect</span>
             </a>
           </li>
-          <li class="nav-faq">
-            <a class="nav-link" href="#{{ coinId }}/faq">
-              <i class="fas fa-comment-dots"></i><span>FAQ</span>
-            </a>
-          </li>
-          <li class="nav-support">
-            <a class="nav-link" href="#{{ coinId }}/support">
-              <i class="ti-headphone-alt"></i><span>Support</span>
-            </a>
-          </li>
         </ul>
 		
 	  </div>
@@ -162,7 +152,7 @@ Apply one or more of the following classes to get the desired effect
 
       <nav class="navbar" >
         <a>  </a>
-        <span class="header-text"><b>Miningcore</b> - making mining easy</span>
+        <span class="header-text"><b>Mining pool</b></span>
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
           <ul class="nav navbar-nav">
@@ -179,18 +169,10 @@ Apply one or more of the following classes to get the desired effect
 <!-- INDEX HOME PAGE -->
 	<div class="page page-index">
 		<section class="content-header">
-			<h1>MININGCORE<small>coins to mine</small></h1>
+			<h1>MININGPOOL<small>coins to mine</small></h1>
 		</section>
 		<div class="content container-fluid " >	
 			
-			<div class="col-12">
-				<div class="card card-shadow card-body">
-					<center><h5> Welcome to Miningcore Mining Pool</h5></center>
-					<hr>
-					<p>Low fee, high performance and a nice design. </br> Pick a coin, connect you miner and make some coins.</p>
-					</br>
-				</div>
-			</div>
 			</br>
 			<div class="col-12">
 				<div class="card card-shadow">
@@ -221,9 +203,7 @@ Apply one or more of the following classes to get the desired effect
 	</div>	
 
 <!-- INDEX FOOTER --> 
-    <footer class="main-index-footer">
-      <strong><a target="_blank" href="https://github.com/minernl/Miningcore.WebUI">&copy; <script>document.write(new Date().getFullYear())</script> made by COINStoMINE.eu</a> - Version 1.02</strong>
-    </footer>
+    <footer class="main-index-footer"></footer>
 
   </div>
 
@@ -248,7 +228,7 @@ Apply one or more of the following classes to get the desired effect
       <nav class="navbar navbar-static-top" role="navigation">
         <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button"><i class="fas fa-bars"></i></a>
 
-        <span class="header-text"><b>Miningcore</b> - making mining easy</span>
+        <span class="header-text"><b>Mining pool</b></span>
 	  
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
@@ -297,7 +277,7 @@ Apply one or more of the following classes to get the desired effect
 						</div>
 						<div class="card-body">
 							<h3 class="card-title"><div id="poolMiners"></div></h3>
-							<p class="card-category"><i class="fas fa-user"></i> Miners (Workers)</p>
+							<p class="card-category"><i class="fas fa-user"></i> Miners online</p>
 						</div>
 						<div class="card-footer">
 							<div class="stats">
@@ -461,7 +441,7 @@ Apply one or more of the following classes to get the desired effect
 				<div class="info-box">
 					<span class="info-box-icon bg-yellow"><i class="fas fa-piggy-bank"></i></span>
 					<div class="info-box-content">
-						<span class="info-box-text">Lifetime Balance</span>
+						<span class="info-box-text">Paid Balance Total</span>
 						<span class="info-box-number"><div id="lifetimeBalance"></div></span>
 					</div>
 				</div>
@@ -498,7 +478,7 @@ Apply one or more of the following classes to get the desired effect
               <div class="card card-table">
                 <div class="card-header bg-aqua">
                   <h3 class="card-title "><p><i class="fas fa-users"></i> Workers (<span id="workerCount"></span>)</p></h3>
-                  <p class="card-category"> List of miners working for you</p>
+                  <p class="card-category"> List of miners working for your address</p>
                 </div>
                 <div class="card-body table-hover">
                   <div class="table-responsive">
@@ -539,7 +519,7 @@ Apply one or more of the following classes to get the desired effect
 			
               <div class="card">
                 <div class="card-header bg-red">
-                  <h3 class="card-title "><p><i class="fas fa-users"></i> Best Miners</p></h3>
+                  <h3 class="card-title "><p><i class="fas fa-users"></i> Top Miners</p></h3>
                   <p class="card-category"> Top 20 contributors</p>
                 </div>
                 <div class="card-body table-hover">
@@ -617,7 +597,7 @@ Apply one or more of the following classes to get the desired effect
               <div class="card">
                 <div class="card-header bg-aqua">
                   <h3 class="card-title "><p><i class="fas fa-wallet"></i> Payments Rewarded</p></h3>
-                  <p class="card-category"> Last 500 payments</p>
+                  <p class="card-category"> Last 100 payments</p>
                 </div>
                 <div class="card-body table-hover">
                   <div class="table-responsive">
@@ -682,193 +662,10 @@ Apply one or more of the following classes to get the desired effect
 		</div>
 	</div>
 	
-<!-- POOL FAQ PAGE -->	  
-    <div class="page page-faq" style="display:none;">
-		<section class="content-header">
-			<h1>POOL<small>questions & answers</small></h1>
-		</section>
-		<div class="content container-fluid">
-		
-		  <div class="row">
-                <div class="col-lg-12 col-sm-12">
-                  <div class="card">
-                    <div class="card-header bg-black-gradient">
-						<h4 class="card-title"><i class="fas fa-comment-dots"></i> FAQ</h4>
-						<p class="card-category">
-							How does the pool work?
-						</p>
-					</div>
-                    <div class="card-body table-responsive faq">
-                      <h4>Do I need to register an account to mine?</h4>
-                      <p>
-                        Registration is not required. Just configure your miner
-                        according to our instructions and start mining. Your
-                        first submitted share will automatically register you
-                        with our pool. Good Luck!
-                      </p>
-                      <h4>
-                        Why is my reported hashrate zero or different from what
-                        my miner reports?
-                      </h4>
-                      <p>
-                        Pool and miner hashrates are re-calculated every ten
-                        minutes. Therefore it can take a maximum of ten minutes
-                        for your hashrate to update depending on the submission
-                        time of your first valid share. The hashrate we display
-                        at the pool is a rough approximation of your hashrate
-                        based on your submitted shares and can therefore differ
-                        significantly from the hashrate displayed locally. When
-                        in doubt always consider the value displayed by your
-                        miner as the correct one.
-                      </p>
-                      <h4>How will I get paid?</h4>
-                      <p>
-                        All of our pools utilize the PPLNS payment system. PPLNS
-                        is short for "Pay Per Last N Shares". The image below
-                        illustrates the system. One round has an arbitrary
-                        number of shares which is solely based on sheer luck.
-                        Proportional reward systems only consider shares of one
-                        round when calculating rewards. PPLNS however, uses a
-                        quite constant number N of shares for calculating
-                        rewards. This number N changes only with the difficulty:
-                      </p>
-                      <img alt="PPLNS" src="img/shares_round.png" style="width:100%;max-width: 500px;">
-                      <p>&nbsp;</p>
-
-                      <p>
-                        As you know the number of shares needed to solve a block
-                        within a round is different. Round one and three needed
-                        (difficulty * 2) shares to be solved. Round two and four
-                        are quite short rounds. There were less than (difficulty
-                        * 2) shares necessary to solve them. Round five however
-                        is a very long round which means the pool needed more
-                        than (difficulty * 2) shares to solve the block. From
-                        this follows that:
-                      </p>
-                      <ul>
-                        <li>
-                          Rounds one and three are like proportional rounds. All
-                          of your shares from the given round are considered for
-                          reward calculations
-                        </li>
-                        <li>
-                          For rounds two and four, shares from the previous
-                          rounds are considered for calculations as well (marked
-                          green). In other words: regardless of round boundaries
-                          we always consider the last
-                          <em>(difficulty * 2)</em> shares. Your portion of the
-                          amount of shares is used to calculate your reward.
-                        </li>
-                        <li>
-                          Round five however is very long. In this round your
-                          lowermost shares (within the marked red part) are
-                          silently dropped if they are not within the last
-                          <em>(difficulty * 2)</em> shares.
-                        </li>
-                      </ul>
-                      <p>
-                        <strong>PPLNS favors constant and/or occasional loyal pool
-                          members over pool hoppers.
-                        </strong>
-                        Pool hoppers are betting for a "quick win" (like round
-                        two above) with low shares per round. If the round
-                        exceeds a certain amount of shares they "hop" to another
-                        proportional pool which started a new round more
-                        recently. This assures better rewards for pool hoppers
-                        over occasional or constant miners which are loyal to
-                        their pool. Pool hopping however implies that pool
-                        hoppers need to know when a round is started and how
-                        much shares are considered for reward. This is very easy
-                        with proportional reward system. While using PPLNS, this
-                        is no longer true. On long rounds (like round five
-                        above) the pool hoppers shares won’t be considered for
-                        reward calculations in favor of loyal miners. This is
-                        due to the fact that pool hoppers only mine on the
-                        beginning of rounds. On short and normal rounds pool
-                        hoppers won’t lose their shares. Due to the fact that
-                        shares from previous rounds from loyal miners are
-                        considered twice (or even more often on extremely short
-                        rounds) the pool hopper won’t get the same reward as
-                        from proportional reward system.
-                      </p>
-                      <p>
-                        Assuming blocks have been found, payouts are processed
-                        and send every 10 minutes. This process is fully automated.
-                      </p>
-                      <h4>When will I get paid?</h4>
-                      <p>
-                        You won't see any balance in your account until a block
-                        has been found by the pool and after the block has
-                        reached a mature status. This may take a couple hours,
-                        depending on the coin. As soon as a block can be
-                        considered 'mature' by the pool, your shares will be
-                        used to calculate your contribution towards finding the
-                        block. The more you've contributed, the higher your cut
-                        of the block reward will be. Your cut of the block
-                        reward will then be credited to your pending balance. If
-                        your balance reaches or exceeds the pool's minimum
-                        payout amount, the pool will transfer your
-                        <b>entire</b> balance to your wallet and
-                        <b>reset</b> your pending balance to zero. The minimum
-                        payout for each pool is listed in its 'Pool Stats' area.
-                      </p>
-                      <p>
-                        We are a small pool for the time being, and as such it
-                        may take some time to find a block. On larger pools you
-                        would see some balance earlier because they will find
-                        blocks faster, but you will get a smaller share of the
-                        reward than what you would in a smaller pool. Over time
-                        you will earn more or less the same amount when mining
-                        on a large pool or on a small one.
-                      </p>
-                      <p>
-                        In other words, the rewards you get on average are
-                        exactly proportional to your part in the total work done
-                        by the pool. If you mine in a pool
-                        <strong>twice as large</strong>, the pool will collect
-                        twice as much rewards but your share in them will be
-                        <strong>cut by half</strong>, meaning you get the same
-                        on average.
-                      </p>
-                      <p>
-                        Trustworthiness, reliability, support and low latency
-                        are the things you should consider when choosing a pool.
-                        By avoiding the largest pools you contribute to the
-                        network health by spreading the hash power.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-		</div>
-
-	</div>
-
-<!-- POOL SUPPORT PAGE -->	  
-    <div class="page page-support" style="display:none;">
-		<section class="content-header">
-			<h1>POOL<small>support</small></h1>
-		</section>
-		<div class="content container-fluid">
-		  <div class="row">
-            <div class="col-lg-12 col-sm-12">
-                <div class="card">
-                   <div class="card-header bg-teal-gradient"><h4 class="title"><i class="ti-headphone-alt"></i> Support</h4></div>
-                    <div class="content table-responsive table-full-width">
-                      <a href="https://discord.gg/" target="_blank"> <img style="width:300px;" src="img/discord.png" alt="Discord"> </a>
-                      <a href="https://t.me/joinchat/" target="_blank"> <img style="width:300px;" src="img/telegram.png" alt="Telegram"> </a>
-                    </div>
-                </div>
-            </div>
-          </div>
-		</div>
-	</div>
 				
   </div> 
 
-  <footer class="main-footer">
-	<strong><a target="_blank" href="https://github.com/minernl/Miningcore.WebUI">&copy; <script>document.write(new Date().getFullYear())</script> made by COINStoMINE.eu</a></strong>    
-  </footer>
+  <footer class="main-footer"></footer>
  
   </div> <!-- end main-pool -->
   
