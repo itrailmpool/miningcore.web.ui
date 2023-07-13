@@ -14,7 +14,7 @@ if (API.substring(API.length-1) != "/")
 	console.log('Corrected API, does not end with / -> New API : ', API);
 } 
 var stratumAddress = window.location.hostname;           				// Stratum address is:  domain.com
-
+var externalPortDelta = 0;								//if you need several pool instances with different ports numbers - change this value in each pool server instance
 
 
 
@@ -375,7 +375,8 @@ function loadConnectPage() {
 			}
 			connectPoolConfig += "<tr><td>Pool Fee</td><td>" + value.poolFeePercent + "%</td></tr>";
 			$.each(value.ports, function(port, options) {
-				connectPoolConfig += "<tr><td>stratum+tcp://" + stratumAddress + ":" + port + "</td><td>";
+				var externalPort = Number(port) + externalPortDelta;
+				connectPoolConfig += "<tr><td>stratum+tcp://" + stratumAddress + ":" + externalPort + "</td><td>";
 				if (typeof options.varDiff !== "undefined" && options.varDiff != null) {
 					connectPoolConfig += "Difficulty Variable / " + options.varDiff.minDiff + " &harr; ";
 					if (typeof options.varDiff.maxDiff === "undefined" || options.varDiff.maxDiff == null) {
