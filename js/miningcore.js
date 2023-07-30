@@ -6,7 +6,7 @@ if (WebURL.substring(WebURL.length-1) != "/")
 	WebURL = WebURL + "/";
 	console.log('Corrected WebURL, does not end with / -> New WebURL : ', WebURL);
 }
-var API            = "http://134.17.89.174:4000/" + "api/";   						// API address is:  https://domain.com/api/
+var API            = "http://localhost:4000/" + "api/";   						// API address is:  https://domain.com/api/
 // API correction if not ends with /
 if (API.substring(API.length-1) != "/")
 {
@@ -95,6 +95,11 @@ function loadIndex() {
 	    console.log('Loading miners page content');
         $(".nav-miners").addClass("active");
 		loadMinersPage();
+        break;
+	  case "workers":
+	    console.log('Loading workers page content');
+        $(".nav-workers").addClass("active");
+		loadWorkerStatistics();
         break;
       case "blocks":
 	    console.log('Loading blocks page content');
@@ -200,6 +205,33 @@ function loadStatsPage() {
   );
 }
 
+// Load WORKERS page content
+function loadWorkerStatistics() {
+  //clearInterval();
+  function render() {
+    //clearInterval();
+    setInterval(
+      (function load() {
+        fetchWorkerStatistics($("#workerName").val());
+		fetchWorkerPerformance($("#workerName").val());
+        return load;
+      })(),
+      60000
+    );
+  }
+  var walletQueryString = window.location.hash.split(/[#/?]/)[3];
+  if (walletQueryString) {
+    var worker = window.location.hash.split(/[#/?]/)[3].replace("workerName=", "");
+    if (worker) {
+	  localStorage.setItem(currentPool + "-workerName", worker);
+      render();
+    }
+  }
+  if (localStorage[currentPool + "-workerName"]) {
+    $("#workerName").val(localStorage[currentPool + "-workerName"]);
+  }
+}
+
 
 // Load DASHBOARD page content
 function loadDashboardPage() {
@@ -229,6 +261,21 @@ function loadDashboardPage() {
   }
 }
 
+$(document).ready(function() {
+  $('#workerDailyStats').DataTable({
+    info: false,
+    ordering: false,
+    paging: true,
+	searching: false
+  });
+  $('#workerDevices').DataTable({
+    info: false,
+    ordering: true,
+    paging: true,
+	searching: false
+  });
+});
+
 
 // Load MINERS page content
 function loadMinersPage() {
@@ -254,6 +301,169 @@ function loadMinersPage() {
       $.notify(
         {
           message: "Error: No response from API.<br>(loadMinersList)"
+        },
+        {
+          type: "danger",
+          timer: 3000
+        }
+      );
+    });
+}
+
+function fetchWorkerPerformance(workerName) {
+  return $.ajax(API + "pools/" + currentPool + "/workers/" + workerName + "/performance")
+    .done(function(data) {
+		const labels = [];
+		const hashrates = [];
+		let sumHashrate1Hour = 0;
+		let sumHashrate24Hours = 0;
+		
+		data.forEach((item, index) => {
+		  // Преобразуем UNIX timestamp в часы и минуты (формат 24-часов)
+		  labels.push(new Date(item.created * 1000).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }));
+
+		  // Собираем хешрейты по всем устройствам данного времени
+		  let totalHashrate = 0;
+		  Object.values(item.workers).forEach(workerData => {
+			totalHashrate += workerData.hashrate;
+		  });
+
+		  // Преобразуем общий хешрейт в TH/s
+		  hashrates.push(totalHashrate / 1e12);
+		  
+		  // Подсчет среднего хешрейта за последний час и за последние 24 часа
+		  if (index < data.length - 1) {
+			sumHashrate24Hours += totalHashrate;
+			if (index < 1) {
+			  sumHashrate1Hour += totalHashrate;
+			}
+		  }
+		});
+		
+		// Вычисление средних значений
+		let averageHashrate1Hour = sumHashrate1Hour / 1;
+		let averageHashrate24Hours = sumHashrate24Hours / 24;
+
+		// Обновление значений на странице
+		document.getElementById('averageHashrate1Hour').textContent = formatHashrate(averageHashrate1Hour);
+		document.getElementById('averageHashrate24Hours').textContent = formatHashrate(averageHashrate24Hours);
+		document.querySelector('.worker-name').textContent = worker;
+		const ctx = document.getElementById('workerHashrateChart').getContext('2d');
+		const myChart = new Chart(ctx, {
+		  type: 'line',
+		  data: {
+			labels: labels,
+			datasets: [
+			  {
+				label: 'Hashrate (TH/s)',
+				data: hashrates,
+				borderColor: 'rgba(75, 192, 192, 1)',
+				borderWidth: 1,
+				fill: false
+			  }
+			]
+		  },
+		  options: {
+			scales: {
+			  y: {
+				ticks: {
+				  callback: function(value) {
+					return formatHashrate(value * 1e12); // Преобразуем обратно в хэши и форматируем
+				  }
+				}
+			  }
+			}
+		  }
+		});
+	  })
+    .fail(function() {
+      $.notify(
+        {
+          message: "Error: No response from API.<br>(fetchWorkerPerformance)"
+        },
+        {
+          type: "danger",
+          timer: 3000
+        }
+      );
+    });
+}
+
+function formatHashrate(value) {
+  if (value === 0 || isNaN(value)) {
+    return "0 H/s";
+  }
+
+  var units = ["", "k", "M", "G", "T", "P", "E", "Z", "Y"];
+  var order = Math.floor(Math.log10(value) / 3);
+  var unitname = units[order];
+  var num = value / Math.pow(10, order * 3);
+  return num.toFixed(1) + ' ' + unitname + "H/s";
+}
+
+
+// Search devices function
+$(document).ready(function() {
+  // Search devices function
+  document.getElementById('searchDevice').addEventListener('keyup', function() {
+    const filter = this.value.toUpperCase();
+    const tbody = document.getElementById('workerDevices').getElementsByTagName('tbody')[0];
+    const rows = tbody.getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+      const cell = rows[i].getElementsByTagName('td')[0];
+      if (cell) {
+        const txtValue = cell.textContent || cell.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          rows[i].style.display = '';
+        } else {
+          rows[i].style.display = 'none';
+        }
+      }
+    }
+  });
+});
+
+
+// Function to fetch worker and devices statistics
+function fetchWorkerStatistics(workerName) {
+  return $.ajax(API + "pools/" + currentPool + "/workers?workerName=" + workerName)
+    .done(function(data) {
+      document.getElementById('totalDevices').textContent = data.workerDevicesStatistic.totalDevices;
+      document.getElementById('devicesOnline').textContent = data.workerDevicesStatistic.devicesOnline;
+      document.getElementById('devicesOffline').textContent = data.workerDevicesStatistic.devicesOffline;
+     
+	       // Worker's Daily Statistics
+      const workerDailyStatsTable = $('#workerDailyStats').DataTable();
+      workerDailyStatsTable.clear().draw();
+      data.workerStatistics.forEach(stat => {
+        workerDailyStatsTable.row.add([
+          new Date(stat.date).toLocaleDateString(),
+          stat.averageHashrate,
+          stat.acceptedShares,
+          stat.unacceptedShares,
+          stat.totalPayment
+        ]).draw();
+      });
+	  
+      // Worker's Devices
+      const workerDevicesTable = $('#workerDevices').DataTable();
+      workerDevicesTable.clear().draw();
+      data.workerDevicesStatistic.workerDevicesStatistic.forEach(device => {
+        workerDevicesTable.row.add([
+          device.deviceName,
+          new Date(device.lastShareDate).toLocaleTimeString(),
+          device.currentHashrate,
+          device.hourlyAverageHashrate,
+          device.dailyAverageHashrate,
+          device.deviceStatus
+        ]).draw();
+      });
+    })
+    .fail(function() {
+      $.notify(
+        {
+          message: "Error: No response from API.<br>(loadDashboardData)"
         },
         {
           type: "danger",
@@ -433,6 +643,17 @@ function loadConnectPage() {
         }
       );
     });
+}
+
+// Workers - load wallet stats
+function loadWorker() {
+  console.log( 'Loading wallet address:',$("#workerName").val() );
+  if ($("#workerName").val().length > 0) {
+    localStorage.setItem(currentPool + "-workerName", $("#workerName").val() );
+  }
+  var coin = window.location.hash.split(/[#/?]/)[1];
+  var currentPage = window.location.hash.split(/[#/?]/)[2] || "stats";
+  window.location.href = "#" + currentPool + "/" + currentPage + "?workerName=" + $("#workerName").val();
 }
 
 
