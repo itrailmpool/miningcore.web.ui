@@ -17,6 +17,34 @@
     However, you can choose any other skin from the css/skins/ folder. 
 	Make sure you apply the skin class to the body tag so the changes take effect. 
   -->
+  
+  	<!-- Including Materialize CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+	<!-- DataTables CSS -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+
+
+    <style>
+        .online-val { color: green; }
+        .offline-val { color: red; }
+        .device-val { font-size: 24px; font-weight: bold; }
+        .chart-wrapper {
+            width: 100%;
+            height: 450px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+		
+		.online {
+		  color: green;
+		}
+
+		.offline {
+		  color: red;
+		}
+    </style>
 
   
   <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
@@ -40,7 +68,16 @@
   <script src="js/bootstrap-toggle.js"></script>
   <script src="js/chartist.min.js"></script>
   <script src="js/miningcore.js"></script>
+	<!-- jQuery -->
+	<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.7.0.js"></script>
 
+	<!-- Including Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+	<!-- DataTables JS -->
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+	<!-- Chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
 </head>
 
@@ -119,6 +156,11 @@ Apply one or more of the following classes to get the desired effect
           <li class="nav-miners">
             <a class="nav-link" href="#{{ coinId }}/miners">
               <i class="fas fa-users"></i></i><span>Miners</span>
+            </a>
+          </li>
+		  <li class="nav-workers">
+            <a class="nav-link" href="#{{ coinId }}/workers">
+              <i class="fas fa-users-cog"></i></i><span>Workers</span>
             </a>
           </li>
           <li class="nav-blocks">
@@ -477,7 +519,7 @@ Apply one or more of the following classes to get the desired effect
 			
               <div class="card card-table">
                 <div class="card-header bg-aqua">
-                  <h3 class="card-title "><p><i class="fas fa-users"></i> Workers (<span id="workerCount"></span>)</p></h3>
+                  <h3 class="card-title "><p><i class="fas fa-users-cog"></i> Workers (<span id="workerCount"></span>)</p></h3>
                   <p class="card-category"> List of miners working for your address</p>
                 </div>
                 <div class="card-body table-hover">
@@ -542,6 +584,127 @@ Apply one or more of the following classes to get the desired effect
 
 			</div>
 
+		  </div>
+		</div>	
+	</div>
+	
+	<!-- POOL WORKERS PAGE -->	
+	<div class="page page-workers" style="display:none;">
+		<section class="content-header">
+			<h1>POOL<small>Workers</small></h1>
+		</section>
+		<div class="content container-fluid">
+			<div class="row">
+				<div class="col-lg-12 col-md-12">
+			
+					<div class="card">
+						<div class="card-header bg-red">
+							<h3 class="card-title "><p><i class="fas fa-users-cog"></i> Workers</p></h3>
+							<p class="card-category"> Enter worker name</p>
+						</div>
+						<div class="card-body">
+							<form>
+								<div class="row">
+									<div class="col-md-12 col-sm-12 col-xs-12">
+										<div class="card-input input-group form-group bmd-form-group">
+											<input class="form-control" type="text" id="workerName" placeholder="Warker name">
+										</div>
+									</div>
+								</div>
+								<button id="load-worker" onClick="loadWorker(this.id)" type="submit" class="btn btn-info btn-fill btn-wd">Find worker</button>	
+								<div class="clearfix"></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		  
+			<div class="container">
+				<div class="row">
+					<h4 id="selectedWorkerName"><span class="worker-name"> </span></h4>
+				</div>
+				<div class="section">
+					<h5>Average Hashrate</h5>
+					<div class="row">
+						<div class="col s6">
+							<div class="card">
+								<div class="card-content">
+									<span class="card-title">For 1 Hour: <span class="device-val" id="averageHashrate1Hour">0 H/s</span></span>
+								</div>
+							</div>
+						</div>
+						<div class="col s6">
+							<div class="card">
+								<div class="card-content">
+									<span class="card-title">For 24 Hours: <span class="device-val" id="averageHashrate24Hours">0 H/s</span></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="section">
+					<h5>Workers</h5>
+					<div class="row">
+						
+						<div class="col s4">
+							<div class="card">
+								<div class="card-content">
+									<span class="card-title">Online: <span class="device-val online-val" id="devicesOnline">0</span></span>
+								</div>
+							</div>
+						</div>
+						<div class="col s4">
+							<div class="card">
+								<div class="card-content">
+									<span class="card-title">Offline: <span class="device-val offline-val" id="devicesOffline">0</span></span>
+								</div>
+							</div>
+						</div>
+						<div class="col s4">
+							<div class="card">
+								<div class="card-content">
+									<span class="card-title">Total: <span class="device-val" id="totalDevices">0</span></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="section">
+					<h5>Worker's Daily Statistics:</h5>
+					<table id="workerDailyStats" class="display" style="width:100%">
+						<thead>
+							<tr>
+								<th>Date</th>
+								<th>Daily Average Hashrate</th>
+								<th>Accepted Shares</th>
+								<th>Rejected Shares</th>
+								<th>Reward</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+				<div class="section">
+					<h5>Worker's Devices:</h5>
+					<input type="text" id="searchDevice" placeholder="Search by device name">
+					<table id="workerDevices" class="display" style="width:100%">
+						<thead>
+							<tr>
+								<th>Device Name</th>
+								<th>Last Share</th>
+								<th>Current Hashrate</th>
+								<th>Hourly Average Hashrate</th>
+								<th>Daily Average Hashrate</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+				<h5>Hashrate Chart</h5>
+				<div class="chart-wrapper">
+					<canvas id="workerHashrateChart"></canvas>
+				</div>
 		  </div>
 		</div>	
 	</div>
