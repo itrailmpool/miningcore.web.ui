@@ -779,7 +779,7 @@ function loadStatsData() {
 		  $("#poolFeePercent").text(value.poolFeePercent + " %");
 		  
           $("#poolHashRate").text(_formatter(value.poolStats.poolHashrate, 5, "H/s"));
-		  $("#poolMiners").text(value.poolStats.connectedMiners + " Miner(s)");
+		  $("#poolMiners").text(value.poolStats.connectedMiners + " Worker(s)");
           
           $("#networkHashRate").text(_formatter(value.networkStats.networkHashrate, 5, "H/s"));
           $("#networkDifficulty").text(_formatter(value.networkStats.networkDifficulty, 5, ""));
