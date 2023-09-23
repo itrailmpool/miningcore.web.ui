@@ -6,7 +6,7 @@ if (WebURL.substring(WebURL.length-1) != "/")
 	WebURL = WebURL + "/";
 	console.log('Corrected WebURL, does not end with / -> New WebURL : ', WebURL);
 }
-var API            = "http://localhost:4000/" + "api/";   						// API address is:  https://domain.com/api/
+var API            = "http://77.105.182.83:4100/" + "api/";   						// API address is:  https://domain.com/api/
 // API correction if not ends with /
 if (API.substring(API.length-1) != "/")
 {
@@ -223,6 +223,7 @@ function loadWorkerStatistics() {
   if (walletQueryString) {
     var worker = window.location.hash.split(/[#/?]/)[3].replace("workerName=", "");
     if (worker) {
+	  $(workerName).val(worker);
 	  localStorage.setItem(currentPool + "-workerName", worker);
       render();
     }
@@ -326,19 +327,19 @@ function fetchWorkerPerformance(workerName) {
 		let sumHashrate24Hours = 0;
 		
 		data.forEach((item, index) => {
-		  // Преобразуем UNIX timestamp в часы и минуты (формат 24-часов)
+		  // ??????????? UNIX timestamp ? ???? ? ?????? (?????? 24-?????)
 		  labels.push(new Date(item.created * 1000).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }));
 
-		  // Собираем хешрейты по всем устройствам данного времени
+		  // ???????? ???????? ?? ???? ??????????? ??????? ???????
 		  let totalHashrate = 0;
 		  Object.values(item.workers).forEach(workerData => {
 			totalHashrate += workerData.hashrate;
 		  });
 
-		  // Преобразуем общий хешрейт в TH/s
+		  // ??????????? ????? ??????? ? TH/s
 		  hashrates.push(totalHashrate / 1e12);
 		  
-		  // Подсчет среднего хешрейта за последний час и за последние 24 часа
+		  // ??????? ???????? ???????? ?? ????????? ??? ? ?? ????????? 24 ????
 		  if (index < data.length - 1) {
 			sumHashrate24Hours += totalHashrate;
 			if (index < 1) {
@@ -347,13 +348,13 @@ function fetchWorkerPerformance(workerName) {
 		  }
 		});
 		
-		// Вычисление средних значений
+		// ?????????? ??????? ????????
 		let averageHashrate1Hour = sumHashrate1Hour / 1;
 		let averageHashrate24Hours = sumHashrate24Hours / 24;
 
-		// Обновление значений на странице
-		document.getElementById('averageHashrate1Hour').textContent = formatHashrate(averageHashrate1Hour);
-		document.getElementById('averageHashrate24Hours').textContent = formatHashrate(averageHashrate24Hours);
+		// ?????????? ???????? ?? ????????
+		//document.getElementById('averageHashrate1Hour').textContent = formatHashrate(averageHashrate1Hour);
+		//document.getElementById('averageHashrate24Hours').textContent = formatHashrate(averageHashrate24Hours);
 		document.querySelector('.worker-name').textContent = worker;
 		const ctx = document.getElementById('workerHashrateChart').getContext('2d');
 		const myChart = new Chart(ctx, {
@@ -375,7 +376,7 @@ function fetchWorkerPerformance(workerName) {
 			  y: {
 				ticks: {
 				  callback: function(value) {
-					return formatHashrate(value * 1e12); // Преобразуем обратно в хэши и форматируем
+					return formatHashrate(value * 1e12); // ??????????? ??????? ? ???? ? ???????????
 				  }
 				}
 			  }
@@ -466,7 +467,7 @@ function fetchWorkerStatistics(workerName) {
           _formatter(device.currentHashRate, 5, 'H/s'),
 		  _formatter(device.hourlyAverageHashRate, 5, 'H/s'),
 		  _formatter(device.dailyAverageHashRate, 5, 'H/s'),
-          device.deviceStatus === true ? 'Online' : 'Offline'
+          device.isOnline === true ? 'Online' : 'Offline'
         ]).draw();
       });
     })
@@ -1079,4 +1080,3 @@ function loadNavigation() {
       );
     });
 }
-
