@@ -148,16 +148,6 @@ Apply one or more of the following classes to get the desired effect
               <i class="fas fa-chart-line"></i><span>Stats</span>
             </a>
           </li>
-          <li class="nav-dashboard">
-            <a class="nav-link" href="#{{ coinId }}/dashboard">
-              <i class="fas fa-tachometer-alt"></i><span>Dashboard</span>
-            </a>
-          </li>
-          <li class="nav-miners">
-            <a class="nav-link" href="#{{ coinId }}/miners">
-              <i class="fas fa-users"></i></i><span>Miners</span>
-            </a>
-          </li>
 		  <li class="nav-workers">
             <a class="nav-link" href="#{{ coinId }}/workers">
               <i class="fas fa-users-cog"></i></i><span>Workers</span>
@@ -547,45 +537,6 @@ Apply one or more of the following classes to get the desired effect
 
 	    </div>
 	
-	</div>
-	
-<!-- POOL MINERS PAGE -->	
-      <div class="page page-miners" style="display:none;">
-		<section class="content-header">
-			<h1>POOL<small>Top miners</small></h1>
-		</section>
-		<div class="content container-fluid">
-		  <div class="row">
-		
-			<div class="col-lg-12 col-md-12">
-			
-              <div class="card">
-                <div class="card-header bg-red">
-                  <h3 class="card-title "><p><i class="fas fa-users"></i> Top Miners</p></h3>
-                  <p class="card-category"> Top 20 contributors</p>
-                </div>
-                <div class="card-body table-hover">
-                  <div class="table-responsive">
-                    <table id="miners" class="table miners">
-                      <thead class=" text-primary">
-                        
-						<tr class="miners">
-							<th>Address</th>
-                            <th>Hashrate</th>
-                            <th>Share Rate</th>
-                        </tr>
-					  
-					  </thead>
-                      <tbody id="minerList"></tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-
-			</div>
-
-		  </div>
-		</div>	
 	</div>
 	
 	<!-- POOL WORKERS PAGE -->	

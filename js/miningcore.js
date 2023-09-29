@@ -91,11 +91,6 @@ function loadIndex() {
         $(".nav-dashboard").addClass("active");
 		loadDashboardPage();
         break;
-	  case "miners":
-	    console.log('Loading miners page content');
-        $(".nav-miners").addClass("active");
-		loadMinersPage();
-        break;
 	  case "workers":
 	    console.log('Loading workers page content');
         $(".nav-workers").addClass("active");
@@ -284,40 +279,6 @@ $(document).ready(function() {
   });
 });
 
-
-// Load MINERS page content
-function loadMinersPage() {
-  return $.ajax(API + "pools/" + currentPool + "/miners?page=0&pagesize=20")
-    .done(function(data) {
-      var minerList = "";
-      if (data.length > 0) {
-        $.each(data, function(index, value) {
-          minerList += "<tr>";
-          //minerList +=   "<td>" + value.miner + "</td>";
-		  minerList +=   '<td>' + value.miner.substring(0, 12) + ' &hellip; ' + value.miner.substring(value.miner.length - 12) + '</td>';
-          //minerList += '<td><a href="' + value.minerAddressInfoLink + '" target="_blank">' + value.miner.substring(0, 12) + ' &hellip; ' + value.miner.substring(value.miner.length - 12) + '</td>';
-          minerList += "<td>" + _formatter(value.hashrate, 5, "H/s") + "</td>";
-          minerList += "<td>" + _formatter(value.sharesPerSecond, 5, "S/s") + "</td>";
-          minerList += "</tr>";
-        });
-      } else {
-        minerList += '<tr><td colspan="4">No miner connected</td></tr>';
-      }
-      $("#minerList").html(minerList);
-    })
-    .fail(function() {
-      $.notify(
-        {
-          message: "Error: No response from API.<br>(loadMinersList)"
-        },
-        {
-          type: "danger",
-          timer: 3000
-        }
-      );
-    });
-}
-
 function fetchWorkerPerformance(workerName) {
   return $.ajax(API + "pools/" + currentPool + "/workers/" + workerName + "/performance")
     .done(function(data) {
@@ -327,19 +288,15 @@ function fetchWorkerPerformance(workerName) {
 		let sumHashrate24Hours = 0;
 		
 		data.forEach((item, index) => {
-		  // ??????????? UNIX timestamp ? ???? ? ?????? (?????? 24-?????)
 		  labels.push(new Date(item.created * 1000).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false }));
 
-		  // ???????? ???????? ?? ???? ??????????? ??????? ???????
 		  let totalHashrate = 0;
 		  Object.values(item.workers).forEach(workerData => {
 			totalHashrate += workerData.hashrate;
 		  });
 
-		  // ??????????? ????? ??????? ? TH/s
 		  hashrates.push(totalHashrate / 1e12);
 		  
-		  // ??????? ???????? ???????? ?? ????????? ??? ? ?? ????????? 24 ????
 		  if (index < data.length - 1) {
 			sumHashrate24Hours += totalHashrate;
 			if (index < 1) {
@@ -348,11 +305,9 @@ function fetchWorkerPerformance(workerName) {
 		  }
 		});
 		
-		// ?????????? ??????? ????????
 		let averageHashrate1Hour = sumHashrate1Hour / 1;
 		let averageHashrate24Hours = sumHashrate24Hours / 24;
 
-		// ?????????? ???????? ?? ????????
 		//document.getElementById('averageHashrate1Hour').textContent = formatHashrate(averageHashrate1Hour);
 		//document.getElementById('averageHashrate24Hours').textContent = formatHashrate(averageHashrate24Hours);
 		document.querySelector('.worker-name').textContent = worker;
@@ -376,7 +331,7 @@ function fetchWorkerPerformance(workerName) {
 			  y: {
 				ticks: {
 				  callback: function(value) {
-					return formatHashrate(value * 1e12); // ??????????? ??????? ? ???? ? ???????????
+					return formatHashrate(value * 1e12);
 				  }
 				}
 			  }
@@ -1080,3 +1035,4 @@ function loadNavigation() {
       );
     });
 }
+
